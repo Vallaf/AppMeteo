@@ -1,8 +1,9 @@
 import React, { useState, useEffect }  from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, Dimensions, ImageBackground} from 'react-native';
-
+import { View, Text, Dimensions, ImageBackground, error} from 'react-native';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
 
 const { width } = Dimensions.get('window');
 
@@ -27,9 +28,21 @@ const styleSheet = {
 };
 
 const HomeScreen = props => {
+
+    async function _getLocationAsync() {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+            MediaStreamError('Permission to access location was denied');
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+            dispatch({type: 'app/getMeteoInformations', payload: location});
+    };
+
         useEffect(() => {
-        dispatch({type: 'app/getMeteoInformations'});
-        console.log(informations);
+            _getLocationAsync();
+       /* dispatch({type: 'app/getMeteoInformations'});
+        console.log(informations);*/
     }, []);
 
     useEffect(() => {        
@@ -37,7 +50,7 @@ const HomeScreen = props => {
             setNameCity(informations.name);
             setTemp(informations.main.temp);
         }
-        console.log(nameCity);
+        //console.log(nameCity);
     });
 
     const { dispatch, app: { informations} } = props;
@@ -49,6 +62,7 @@ const HomeScreen = props => {
         <View style={styleSheet.container}>
             <Text style={styleSheet.textStyle}>{`Ville: ${nameCity}`}</Text>
             <Text style={styleSheet.textStyle}>{`Temperature: ${temp}°C`}</Text>
+            {error !== '' && <Text style={styleSheet.erroStyle}>{error}</Text>}
         </View>
         </ImageBackground>
     );
