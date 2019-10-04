@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, TextInput, Button, Dimensions, AsyncStorage } from 'react-native';
+import { View, Text, TextInput, Button, Dimensions, AsyncStorage, Image } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -12,20 +12,22 @@ const styleSheet = {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'white'
     },
     label: {
         justifyContent: 'center',
         color: 'black',
+        fontWeight: 'bold',
         fontSize: 18,
     },
     input: {
         width: '80%',
-        borderRadius: 10,
+        borderRadius: 40,
         height: 40,
-        borderColor: 'pink',
+        borderColor: 'black',
         borderWidth: 2,
         fontWeight: 'bold',
-        color: '#3b9ec0'
+        color: 'black'
     },
 };
 
@@ -42,6 +44,9 @@ const IntroFormScreen = props => {
 
     return (
         <View style={styleSheet.container}>
+            <Image
+                style={{ width: '100%', height: '80%' }}
+                source={{ uri: 'https://media.giphy.com/media/uMUPuz6h2xlzW/giphy.gif' }} />
             <Text style={styleSheet.label} >NAME</Text>
             <TextInput
                 style={styleSheet.input}
@@ -52,7 +57,7 @@ const IntroFormScreen = props => {
             <Button
                 onPress={handleSubmit}
                 title="OK"
-                color="#3b9ec0"
+                color="black"
             />
         </View>
     );

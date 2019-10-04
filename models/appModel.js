@@ -18,9 +18,8 @@ export const app = {
             console.log(location);
             if (location) {
                 const { coords: { latitude, longitude } } = location;
-                const lat = Math.floor(latitude);
-                const lon = Math.floor(longitude);
-
+                const lat = latitude;
+                const lon = longitude;
                 const response = await requestGet('weather', `lat=${lat}&lon=${lon}`);
                 console.log(response);
                 if (response) {
