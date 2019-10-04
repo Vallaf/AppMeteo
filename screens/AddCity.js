@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Dimensions, TextInput,Image, TouchableOpacity, Keyboard, StyleSheet } from 'react-native';
-//import {requestGet } from '../utils/requestApi.js';
+import { connect } from 'react-redux';
+import { View, Text, Dimensions, TextInput, Image, TouchableOpacity, Button, StyleSheet, AsyncStorage } from 'react-native';
+import { requestGet } from '../utils/requestApi.js';
 
 const { width } = Dimensions.get('window');
 
@@ -12,6 +13,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         borderColor: '#CCCCCC',
+        borderWidth: 1,
         borderTopWidth: 1,
         borderBottomWidth: 1,
         height: 50,
@@ -27,6 +29,16 @@ const styles = StyleSheet.create({
         padding: 15,
         margin: 5
     },
+
+    input: {
+        width: '80%',
+        borderRadius: 20,
+        height: 40,
+        borderColor: 'black',
+        borderWidth: 2,
+        fontWeight: 'bold',
+        color: 'black'
+    },
     saveButtonText: {
         color: '#FFFFFF',
         fontSize: 20,
@@ -34,27 +46,45 @@ const styles = StyleSheet.create({
     }
 });
 
-const nameCity = props => (
+const nameCity = props => {
+    async function _getLocationAsync() {
+        dispatch({ type: 'app/getMeteoInformations', payload: name });
+    };
 
-    <View style={styles.inputContainer}>
+    useEffect(() => {
+        setName(name)
+       
+    });
+        
+    const { dispatch, app: { name} } = props;
 
-        <TextInput
-            style={styles.textInput}
-            placeholder="ADD CITY"
-            maxLength={50}
-            onBlur={Keyboard.dismiss}
-        />
-        <TouchableOpacity style={styles.saveButton}>
-            <Text style={styles.saveButtonText}>Search</Text>
-        </TouchableOpacity>
-        <Image
-            style={{ width: '100%', height: '100%' }}
-            source={{ uri: 'https://media.giphy.com/media/26FL3tIixOyV5xYuA/giphy.gif' }} />
+    async function handleSubmit() {
+        _getLocationAsync()
+        console.log(name);
+    }
+    const [name, setName] = useState('');
+    return (
+        <View style={styles.inputContainer}>
+            <TextInput
+                style={styles.textInput}
+                onChangeText={(text) => setName(text)}
+                value={name}
+            />
+            <Button onPress={handleSubmit}
+                title="OK"
+                color="black"
+            />
+            <Image
+                style={{ width: '100%', height: '100%' }}
+                source={{ uri: 'https://media.giphy.com/media/26FL3tIixOyV5xYuA/giphy.gif' }} />
+            <Text style={styleSheet.textStyle}>{`${name}`}</Text>
+        </View>
+    );
+}
 
-    </View>
+AddCity.propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    
+};
 
-);
-
-nameCity.propTypes = {};
-
-export default nameCity;
+export default connect(({ app }) => ({ app }))(AddCity);
